@@ -19,6 +19,7 @@ export interface JobApplication {
   job_description?: string;
   job_url?: string;
   status: JobStatus;
+  location?: string;
   notes?: string;
   resume_filename?: string;
   applied_at: string;
@@ -31,6 +32,7 @@ export interface JobCreate {
   job_description?: string;
   job_url?: string;
   status?: JobStatus;
+  location?: string;
   notes?: string;
 }
 

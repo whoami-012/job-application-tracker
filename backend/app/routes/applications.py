@@ -23,7 +23,7 @@ async def create_application(payload: JobCreate, db: AsyncSession = Depends(get_
 
 # ── LIST (all) ────────────────────────────────────────────────────────────────
 
-@router.get("/", response_model=list[JobResponse])
+@router.get("", response_model=list[JobResponse])
 async def list_applications(db: AsyncSession = Depends(get_db)):
     result = await db.execute(select(Job).order_by(Job.applied_at.desc()))
     return result.scalars().all()

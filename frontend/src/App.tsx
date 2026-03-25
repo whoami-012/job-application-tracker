@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Plus, Search, Filter, Briefcase, Building2, Calendar, Link as LinkIcon, Pencil, Trash2, Sun, Moon } from 'lucide-react';
+import { Plus, Search, Filter, Briefcase, Building2, Calendar, Link as LinkIcon, Pencil, Trash2, Sun, Moon, MapPin } from 'lucide-react';
 import { api } from './api';
 import type { JobApplication, JobStatus, JobCreate } from './api';
 import './App.css';
@@ -50,6 +50,7 @@ function App() {
     job_description: '',
     job_url: '',
     status: 'Applied',
+    location: '',
     notes: ''
   });
 
@@ -98,7 +99,7 @@ function App() {
       }
       setIsModalOpen(false);
       setEditingJob(null);
-      setFormData({ company_name: '', job_title: '', job_description: '', job_url: '', status: 'Applied', notes: '' });
+      setFormData({ company_name: '', job_title: '', job_description: '', job_url: '', status: 'Applied', location: '', notes: '' });
       loadApplications();
     } catch (error) {
       console.error('Failed to save application:', error);
@@ -124,6 +125,7 @@ function App() {
       job_description: job.job_description || '',
       job_url: job.job_url || '',
       status: job.status,
+      location: job.location || '',
       notes: job.notes || ''
     });
     setIsModalOpen(true);
@@ -159,7 +161,7 @@ function App() {
             </button>
             <button className="btn-primary" onClick={() => { 
               setEditingJob(null); 
-              setFormData({ company_name: '', job_title: '', job_description: '', job_url: '', status: 'Applied', notes: '' });
+              setFormData({ company_name: '', job_title: '', job_description: '', job_url: '', status: 'Applied', location: '', notes: '' });
               setIsModalOpen(true); 
             }}>
               <Plus size={20} />
@@ -237,9 +239,17 @@ function App() {
                   <div className="job-card-body">
                     <div className="detail-row">
                       <StatusBadge status={app.status} />
-                      <div className="date-info">
-                        <Calendar size={14} />
-                        <span>{new Date(app.applied_at).toLocaleDateString()}</span>
+                      <div className="job-meta">
+                        {app.location && (
+                          <div className="meta-info">
+                            <MapPin size={14} />
+                            <span>{app.location}</span>
+                          </div>
+                        )}
+                        <div className="meta-info">
+                          <Calendar size={14} />
+                          <span>{new Date(app.applied_at).toLocaleDateString()}</span>
+                        </div>
                       </div>
                     </div>
                     
@@ -314,6 +324,15 @@ function App() {
                     value={formData.job_url}
                     onChange={e => setFormData({...formData, job_url: e.target.value})}
                     placeholder="https://..."
+                  />
+                </div>
+                <div className="form-group">
+                  <label>Location</label>
+                  <input 
+                    type="text" 
+                    value={formData.location}
+                    onChange={e => setFormData({...formData, location: e.target.value})}
+                    placeholder="e.g. Remote, New York"
                   />
                 </div>
               </div>

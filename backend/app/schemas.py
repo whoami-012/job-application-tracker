@@ -21,6 +21,7 @@ class JobCreate(BaseModel):
     job_description: Optional[str] = None
     job_url: Optional[str] = None
     status: JobStatus = "Applied"
+    location: Optional[str] = None
     notes: Optional[str] = None
     resume_filename: Optional[str] = None
 
@@ -31,6 +32,7 @@ class JobResponse(BaseModel):
     job_description: Optional[str]
     job_url: Optional[str]
     status: str
+    location: Optional[str]
     notes: Optional[str]
     resume_filename: Optional[str]
     applied_at: datetime
@@ -45,5 +47,6 @@ class JobUpdate(BaseModel):
     job_description: Optional[str] = None
     job_url: Optional[str] = None
     status: Optional[JobStatus] = None
+    location: Optional[str] = None
     notes: Optional[str] = None
     resume_filename: Optional[str] = None
