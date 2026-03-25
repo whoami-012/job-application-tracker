@@ -1,0 +1,92 @@
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --radius: 0.75rem;
+
+  /* Status Colors */
+  --status-applied: #e2e8f0;
+  --status-applied-text: #475569;
+  --status-review: #dcfce7;
+  --status-review-text: #166534;
+  --status-interview: #fef9c3;
+  --status-interview-text: #854d0e;
+  --status-offered: #dbeafe;
+  --status-offered-text: #1e40af;
+  --status-accepted: #f0fdf4;
+  --status-accepted-text: #15803d;
+  --status-rejected: #fee2e2;
+  --status-rejected-text: #991b1b;
+  --status-withdrawn: #f1f5f9;
+  --status-withdrawn-text: #64748b;
+
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: light;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+[data-theme='dark'] {
+  --bg-main: #0f172a;
+  --bg-card: #1e293b;
+  --text-main: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border: #334155;
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+  --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+  color-scheme: dark;
+
+  /* Darker Status Backgrounds for better contrast */
+  --status-applied: #334155;
+  --status-applied-text: #cbd5e1;
+  --status-review: #064e3b;
+  --status-review-text: #6ee7b7;
+  --status-interview: #713f12;
+  --status-interview-text: #fde047;
+  --status-offered: #1e3a8a;
+  --status-offered-text: #93c5fd;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+  transition: all 0.2s ease;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: 1rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+}
