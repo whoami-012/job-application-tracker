@@ -39,9 +39,10 @@ A modern, full-stack application to track your job search progress. Features a F
 4. **Environment Variables:**
    Create a `.env` file in the `backend/` folder:
    ```env
-   DATABASE_URL=postgresql+asyncpg://postgres:yourpassword@localhost:5432/jobappdb
+   DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5433/jobappdb
    CORS_ORIGINS=http://localhost:5173
    ```
+   The backend now requires `DATABASE_URL` explicitly and prints the active database target on startup, so a missing or wrong value fails fast instead of silently falling back to another database.
 5. **Run Migrations:**
    ```bash
    alembic upgrade head

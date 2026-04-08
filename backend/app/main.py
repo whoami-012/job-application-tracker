@@ -18,6 +18,11 @@ app.add_middleware(
 app.include_router(applications.router)
 
 
+@app.on_event("startup")
+async def log_runtime_config():
+    print(f"Using database target: {settings.database_target}")
+
+
 @app.get("/health")
 async def health():
     return {"status": "ok"}

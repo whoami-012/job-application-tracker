@@ -1,4 +1,7 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+import os
+import shutil
+import uuid
+from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile, Form
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 from uuid import UUID
@@ -9,12 +12,47 @@ from app.schemas import JobCreate, JobResponse, JobUpdate
 
 router = APIRouter(prefix="/api/applications", tags=["applications"])
 
+# Ensure absolute path for uploads
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
+
+if not os.path.exists(UPLOAD_DIR):
+    os.makedirs(UPLOAD_DIR)
 
 # ── CREATE ────────────────────────────────────────────────────────────────────
 
-@router.post("/", response_model=JobResponse, status_code=status.HTTP_201_CREATED)
-async def create_application(payload: JobCreate, db: AsyncSession = Depends(get_db)):
-    job = Job(**payload.model_dump())
+@router.post("", response_model=JobResponse, status_code=status.HTTP_201_CREATED)
+async def create_application(
+    company_name: str = Form(...),
+    job_title: str = Form(...),
+    job_description: str = Form(None),
+    job_url: str = Form(None),
+    status: str = Form("Applied"),
+    location: str = Form(None),
+    notes: str = Form(None),
+    resume: UploadFile = File(None),
+    db: AsyncSession = Depends(get_db)
+):
+    resume_filename = None
+    if resume and resume.filename:
+        # Generate a truly unique filename
+        resume_filename = f"{uuid.uuid4().hex[:8]}_{resume.filename}"
+        file_path = os.path.join(UPLOAD_DIR, resume_filename)
+        
+        with open(file_path, "wb") as buffer:
+            shutil.copyfileobj(resume.file, buffer)
+
+    job = Job(
+        company_name=company_name,
+        job_title=job_title,
+        job_description=job_description,
+        job_url=job_url,
+        status=status,
+        location=location,
+        notes=notes,
+        resume_filename=resume_filename
+    )
+    
     db.add(job)
     await db.commit()
     await db.refresh(job)
@@ -81,3 +119,23 @@ async def delete_application(id: UUID, db: AsyncSession = Depends(get_db)):
 
     await db.delete(job)
     await db.commit()
+
+from fastapi.responses import FileResponse
+
+# ── RESUME DOWNLOAD ───────────────────────────────────────────────────────────
+
+@router.get("/{id}/resume")
+async def download_resume(id: UUID, db: AsyncSession = Depends(get_db)):
+    job = await db.get(Job, id)
+    if not job or not job.resume_filename:
+        raise HTTPException(status_code=404, detail="Resume not found")
+
+    file_path = os.path.join(UPLOAD_DIR, job.resume_filename)
+    if not os.path.exists(file_path):
+        raise HTTPException(status_code=404, detail="File not found on server")
+
+    return FileResponse(
+        path=file_path,
+        filename=job.resume_filename.split('_', 1)[-1], # Remove our prefix for the user
+        media_type='application/pdf'
+    )

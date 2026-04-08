@@ -294,6 +294,18 @@
   border-top: 1px solid var(--border);
   padding-top: 0.75rem;
   margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.description-preview strong, .notes-preview strong {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  display: block;
+  margin-bottom: 0.125rem;
 }
 
 .job-notes {
@@ -303,6 +315,51 @@
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  margin: 0;
+}
+
+.job-link.resume-link {
+  color: #8b5cf6; /* A purple color to distinguish from the job link */
+}
+
+.job-link.resume-link:hover {
+  color: #7c3aed;
+}
+
+[data-theme='dark'] .job-link.resume-link {
+  color: #a78bfa;
+}
+
+.form-group input[type="file"] {
+  padding: 0.5rem 0;
+  border: none;
+  font-size: 0.875rem;
+  background: transparent;
+}
+
+.form-group input[type="file"]::-webkit-file-upload-button {
+  background: #f1f5f9;
+  border: 1px solid var(--border);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  font-weight: 600;
+  color: #475569;
+  cursor: pointer;
+  margin-right: 0.75rem;
+  transition: all 0.2s;
+}
+
+.form-group input[type="file"]::-webkit-file-upload-button:hover {
+  background: #e2e8f0;
+}
+
+[data-theme='dark'] .form-group input[type="file"]::-webkit-file-upload-button {
+  background: #334155;
+  color: #f1f5f9;
+}
+
+[data-theme='dark'] .form-group input[type="file"]::-webkit-file-upload-button:hover {
+  background: #475569;
 }
 
 /* Status Badges */

@@ -51,7 +51,8 @@ function App() {
     job_url: '',
     status: 'Applied',
     location: '',
-    notes: ''
+    notes: '',
+    resume: null
   });
 
   useEffect(() => {
@@ -99,7 +100,7 @@ function App() {
       }
       setIsModalOpen(false);
       setEditingJob(null);
-      setFormData({ company_name: '', job_title: '', job_description: '', job_url: '', status: 'Applied', location: '', notes: '' });
+      setFormData({ company_name: '', job_title: '', job_description: '', job_url: '', status: 'Applied', location: '', notes: '', resume: null });
       loadApplications();
     } catch (error) {
       console.error('Failed to save application:', error);
@@ -126,7 +127,8 @@ function App() {
       job_url: job.job_url || '',
       status: job.status,
       location: job.location || '',
-      notes: job.notes || ''
+      notes: job.notes || '',
+      resume: null
     });
     setIsModalOpen(true);
   };
@@ -161,7 +163,7 @@ function App() {
             </button>
             <button className="btn-primary" onClick={() => { 
               setEditingJob(null); 
-              setFormData({ company_name: '', job_title: '', job_description: '', job_url: '', status: 'Applied', location: '', notes: '' });
+              setFormData({ company_name: '', job_title: '', job_description: '', job_url: '', status: 'Applied', location: '', notes: '', resume: null });
               setIsModalOpen(true); 
             }}>
               <Plus size={20} />
@@ -259,11 +261,29 @@ function App() {
                         <span>View Job Posting</span>
                       </a>
                     )}
+                    
+                    {app.resume_filename && (
+                      <a href={api.getResumeUrl(app.id)} target="_blank" rel="noopener noreferrer" className="job-link resume-link">
+                        <Briefcase size={14} />
+                        <span>Download Resume</span>
+                      </a>
+                    )}
                   </div>
 
-                  {app.notes && (
+                  {(app.job_description || app.notes) && (
                     <div className="job-card-footer">
-                      <p className="job-notes">{app.notes}</p>
+                      {app.job_description && (
+                        <div className="description-preview">
+                          <strong>Description:</strong>
+                          <p className="job-notes">{app.job_description.length > 150 ? app.job_description.substring(0, 150) + '...' : app.job_description}</p>
+                        </div>
+                      )}
+                      {app.notes && (
+                        <div className="notes-preview">
+                          <strong>Notes:</strong>
+                          <p className="job-notes">{app.notes}</p>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
@@ -335,6 +355,23 @@ function App() {
                     placeholder="e.g. Remote, New York"
                   />
                 </div>
+                <div className="form-group">
+                  <label>Resume (PDF)</label>
+                  <input 
+                    type="file" 
+                    accept=".pdf"
+                    onChange={e => setFormData({...formData, resume: e.target.files?.[0] || null})}
+                  />
+                </div>
+              </div>
+              <div className="form-group">
+                <label>Job Description</label>
+                <textarea 
+                  rows={5}
+                  value={formData.job_description}
+                  onChange={e => setFormData({...formData, job_description: e.target.value})}
+                  placeholder="Paste the job description here..."
+                />
               </div>
               <div className="form-group">
                 <label>Notes</label>

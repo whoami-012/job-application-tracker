@@ -43,7 +43,8 @@ echo "📡 Starting Backend (FastAPI) on port 8000..."
 echo "💻 Starting Frontend (Vite) on port 5173..."
 (
     cd frontend
-    npm run dev -- --host
+#    npm run dev -- --host
+     npm run dev -- --port 5173
 ) &
 
 echo ""
